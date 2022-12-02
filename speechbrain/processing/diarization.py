@@ -920,7 +920,9 @@ class Spec_Clust_unorm:
             number of speakers then returns k_oracle.
         """
 
-        lambdas, eig_vecs = scipy.sparse.linalg.eigsh(L, k=max_eigenvectors)
+        lambdas, eig_vecs = scipy.sparse.linalg.eigsh(
+            L, k=max_eigenvectors, which="SM"
+        )
 
         # if params["oracle_n_spkrs"] is True:
         if k_oracle is not None:
