@@ -21,23 +21,23 @@ Authors
 import csv
 import numbers
 import warnings
-import scipy
-import pytest
-import numpy as np
 
+import numpy as np
+import pytest
+import scipy
 from scipy import sparse
-from scipy.sparse.linalg import eigsh
 from scipy.sparse.csgraph import connected_components
 from scipy.sparse.csgraph import laplacian as csgraph_laplacian
+from scipy.sparse.linalg import ArpackNoConvergence, eigsh
 
 np.random.seed(1234)
 pytest.importorskip("sklearn")
 
 try:
     import sklearn
-    from sklearn.neighbors import kneighbors_graph
     from sklearn.cluster import SpectralClustering
     from sklearn.cluster._kmeans import k_means
+    from sklearn.neighbors import kneighbors_graph
 except ImportError:
     err_msg = "The optional dependency sklearn is used in this module\n"
     err_msg += "Cannot import sklearn. \n"
@@ -920,9 +920,12 @@ class Spec_Clust_unorm:
             number of speakers then returns k_oracle.
         """
 
-        lambdas, eig_vecs = scipy.sparse.linalg.eigsh(
-            L, k=max_eigenvectors, which="SM"
-        )
+        try:
+            lambdas, eig_vecs = scipy.sparse.linalg.eigsh(
+                L, k=max_eigenvectors, which="SM", maxiter=1e7
+            )
+        except ArpackNoConvergence:
+            lambdas, eig_vecs = scipy.linalg.eigh(L)
 
         # if params["oracle_n_spkrs"] is True:
         if k_oracle is not None:
