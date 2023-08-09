@@ -918,10 +918,11 @@ class Spec_Clust_unorm:
             Estimated number of speakers. If the condition is set to the oracle
             number of speakers then returns k_oracle.
         """
-
+        from scipy.sparse import bsr_matrix
         try:
+            L_bsr = bsr_matrix(L)
             lambdas, eig_vecs = scipy.sparse.linalg.eigsh(
-                L, k=max_eigenvectors, which="SM", maxiter=1e7
+                L_bsr, k=max_eigenvectors, which="SM", maxiter=1e7
             )
         except ArpackNoConvergence:
             lambdas, eig_vecs = scipy.linalg.eigh(L)
