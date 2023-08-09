@@ -920,9 +920,9 @@ class Spec_Clust_unorm:
         """
         from scipy.sparse import bsr_matrix
         try:
-            L_bsr = bsr_matrix(L)
+            L = bsr_matrix(L)
             lambdas, eig_vecs = scipy.sparse.linalg.eigsh(
-                L_bsr, k=max_eigenvectors, which="SM", maxiter=1e7
+                L, k=max_eigenvectors, which="SM", maxiter=1e7
             )
         except ArpackNoConvergence:
             lambdas, eig_vecs = scipy.linalg.eigh(L)
